@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   selectCartItems,
   selectCartTotal,
@@ -12,6 +12,7 @@ import "./Cart.css";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const items = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
   const shipping = total >= 99 ? 0 : 9.99;
@@ -109,7 +110,7 @@ const Cart = () => {
             <span>Total</span>
             <span>${grandTotal.toFixed(2)}</span>
           </div>
-          <button className="checkout-btn">Proceed to Checkout</button>
+          <button className="checkout-btn" onClick={() => navigate("/checkout")}>Proceed to Checkout</button>
           <Link to="/" className="continue-link">← Continue Shopping</Link>
         </aside>
       </div>

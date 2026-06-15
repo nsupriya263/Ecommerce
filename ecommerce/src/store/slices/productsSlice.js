@@ -1,8 +1,19 @@
 // src/store/slices/productsSlice.js
-// REPLACES the existing productsSlice.js
+// Uses API when available, falls back to local data
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchProducts, fetchCategories } from "../../services/api";
+import localProducts from "../../data/products";
+
+// Try to import API functions, but they may fail if backend is down
+let fetchProductsApi, fetchCategoriesApi;
+try {
+  const api = require("../../services/api");
+  fetchProductsApi = api.fetchProducts;
+  fetchCategoriesApi = api.fetchCategories;
+} catch (e) {
+  fetchProductsApi = null;
+  fetchCategoriesApi = null;
+}
 
 // ── Async thunks ──────────────────────────────────────────
 export const loadProducts = createAsyncThunk(
@@ -10,11 +21,44 @@ export const loadProducts = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const { category, searchQuery, sortBy } = getState().products;
-      const params = {};
-      if (category !== "All") params.category = category;
-      if (searchQuery.trim()) params.search = searchQuery;
-      if (sortBy !== "default") params.sortBy = sortBy;
-      return await fetchProducts(params);
+
+      // Try API first
+      if (fetchProductsApi) {
+        try {
+          const params = {};
+          if (category !== "All") params.category = category;
+          if (searchQuery.trim()) params.search = searchQuery;
+          if (sortBy !== "default") params.sortBy = sortBy;
+          return await fetchProductsApi(params);
+        } catch (apiErr) {
+          // API failed, fall through to local data
+          console.warn("API unavailable, using local data:", apiErr.message);
+        }
+      }
+
+      // Fallback: use local data with client-side filtering
+      let filtered = [...localProducts];
+
+      if (category !== "All") {
+        filtered = filtered.filter((p) => p.category === category);
+      }
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(
+          (p) =>
+            p.name.toLowerCase().includes(q) ||
+            p.description.toLowerCase().includes(q)
+        );
+      }
+      if (sortBy === "price-asc") {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (sortBy === "price-desc") {
+        filtered.sort((a, b) => b.price - a.price);
+      } else if (sortBy === "rating") {
+        filtered.sort((a, b) => b.rating - a.rating);
+      }
+
+      return filtered;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -25,7 +69,16 @@ export const loadCategories = createAsyncThunk(
   "products/loadCategories",
   async (_, { rejectWithValue }) => {
     try {
-      return await fetchCategories();
+      if (fetchCategoriesApi) {
+        try {
+          return await fetchCategoriesApi();
+        } catch (apiErr) {
+          console.warn("API unavailable for categories, using local data");
+        }
+      }
+      // Fallback: extract categories from local data
+      const cats = ["All", ...new Set(localProducts.map((p) => p.category))];
+      return cats;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -88,7 +141,9 @@ export const selectSortBy = (state) => state.products.sortBy;
 export const selectProductsStatus = (state) => state.products.status;
 export const selectProductsError = (state) => state.products.error;
 
-// Products are already filtered/sorted server-side
+// Products are already filtered/sorted
 export const selectFilteredProducts = selectAllProducts;
 
 export default productsSlice.reducer;
+
+

@@ -71,8 +71,8 @@ const Home = () => {
       {status === "succeeded" && products.length > 0 && (
         <div className="products-grid">
           {products.map((product, i) => (
-            <div key={product._id} style={{ animationDelay: `${i * 0.05}s` }}>
-              <ProductCard product={{ ...product, id: product._id }} />
+            <div key={product._id || product.id} style={{ animationDelay: `${i * 0.05}s` }}>
+              <ProductCard product={{ ...product, id: product._id || product.id }} />
             </div>
           ))}
         </div>
