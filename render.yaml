@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ecommerce
+    env: node
+    plan: free
+    repo: https://github.com/nsupriya263/Ecommerce.git
+    branch: main
+    root: ecommerce
+    buildCommand: npm run build
+    startCommand: npm start
