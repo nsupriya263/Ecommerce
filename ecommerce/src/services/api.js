@@ -1,7 +1,7 @@
 // src/services/api.js
-// Replace your static data/products.js with real API calls
+// API calls — uses relative /api path on Vercel, fallback for local dev
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
 const getToken = () => localStorage.getItem("token");
 
@@ -27,7 +27,7 @@ export const fetchProducts = (params = {}) => {
 };
 
 export const fetchProduct = (id) => request(`/products/${id}`);
-export const fetchCategories = () => request("/products/categories");
+export const fetchCategories = () => request("/categories");
 
 // ── Auth (Supabase via backend) ───────────────────────────
 export const signUp = (email, password, name) =>
