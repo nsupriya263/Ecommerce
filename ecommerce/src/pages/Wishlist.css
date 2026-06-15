@@ -1,0 +1,106 @@
+.wishlist-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+.wishlist-empty-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+.wishlist-empty-content svg { opacity: 0.25; color: var(--red); }
+.wishlist-empty-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--text-primary);
+}
+.shop-btn {
+  margin-top: 8px;
+  background: var(--accent);
+  color: #000;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+.shop-btn:hover { opacity: 0.85; }
+
+.wishlist-page { padding: 40px 0 80px; }
+.wishlist-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 32px;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.wishlist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.wishlist-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+.wishlist-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.wishlist-card-body { padding: 16px; }
+.wishlist-cat {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.wishlist-name {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+.wishlist-name:hover { color: var(--accent); }
+.wishlist-price { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+
+.wishlist-actions { display: flex; gap: 8px; align-items: center; }
+.wl-cart-btn {
+  flex: 1;
+  background: var(--accent);
+  color: #000;
+  border-radius: var(--radius-sm);
+  padding: 8px 0;
+  font-weight: 700;
+  font-size: 0.82rem;
+  transition: opacity 0.2s;
+}
+.wl-cart-btn:hover { opacity: 0.85; }
+.wl-remove-btn {
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+.wl-remove-btn:hover { background: rgba(224,82,82,0.1); color: var(--red); border-color: var(--red); }
